@@ -3,4 +3,5 @@
   <Project Path="TaskCrudBanco.Application/TaskCrudBanco.Application.csproj" />
   <Project Path="TaskCrudBanco.Domain/TaskCrudBanco.Domain.csproj" />
   <Project Path="TaskCrudBanco.Infrastructure/TaskCrudBanco.Infrastructure.csproj" />
+  <Project Path="TaskCrudBanco.Tests/TaskCrudBanco.Tests.csproj" />
 </Solution>

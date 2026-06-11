@@ -37,6 +37,11 @@ public class Account
 
     public void Withdraw(decimal amount)
     {
+        if(amount <= 0)
+        {
+            throw new ArgumentException("Value must be higher than zero");
+        }
+
         if(Balance < amount)
         {
             throw new InsufficientFundsException();
