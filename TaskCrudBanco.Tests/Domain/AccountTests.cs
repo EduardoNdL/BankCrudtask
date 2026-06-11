@@ -1,6 +1,8 @@
 using TaskCrudBanco.Domain.Entities;
 using TaskCrudBanco.Domain.Exceptions;
 
+namespace TaskCrudBanco.Tests.Domain;
+
 public class AccountTests
 {
     public class DepositTests
