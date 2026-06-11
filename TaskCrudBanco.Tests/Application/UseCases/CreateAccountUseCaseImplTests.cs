@@ -21,8 +21,8 @@ public class CreateAccountUseCaseImplTests
     {
         AccountRequestDto request = new AccountRequestDto("123", "Eduardo");
 
-        _accountRepository.Setup(r => r.GetByNumberAsync(request.AccountNumber)).ReturnsAsync((Account?) null);
-        _accountRepository.Setup(r => r.AddAsync(It.IsAny<Account>())).ReturnsAsync((Account a) => a);
+        _accountRepository.Setup(repository => repository.GetByNumberAsync(request.AccountNumber)).ReturnsAsync((Account?) null);
+        _accountRepository.Setup(r => r.AddAsync(It.IsAny<Account>())).ReturnsAsync((Account account) => account);
 
         AccountResponseDto response = await _useCase.ExecuteAsync(request);
 
@@ -37,7 +37,7 @@ public class CreateAccountUseCaseImplTests
         AccountRequestDto request = new AccountRequestDto("123", "Eduardo");
         Account existingAccount = new Account(request.AccountNumber, request.OwnerName);
 
-        _accountRepository.Setup(r => r.GetByNumberAsync(request.AccountNumber)).ReturnsAsync(existingAccount);
+        _accountRepository.Setup(repository => repository.GetByNumberAsync(request.AccountNumber)).ReturnsAsync(existingAccount);
 
         await Assert.ThrowsAsync<ArgumentException>(async () => await _useCase.ExecuteAsync(request));
     }

@@ -26,8 +26,8 @@ public class WithdrawUseCaseImplTests
         Account account = new Account("123", "Eduardo");
         account.Deposit(15);
         
-        _accountRepository.Setup(r => r.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(account);
-        _transactionRepository.Setup(r => r.AddAsync(It.IsAny<Transaction>())).ReturnsAsync((Transaction t) => t);
+        _accountRepository.Setup(repository => repository.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(account);
+        _transactionRepository.Setup(repository => repository.AddAsync(It.IsAny<Transaction>())).ReturnsAsync((Transaction transaction) => transaction);
 
         TransactionResponseDto response = await _useCase.ExecuteAsync(transactionRequestDto, Guid.NewGuid());
 
@@ -39,7 +39,7 @@ public class WithdrawUseCaseImplTests
     {
         TransactionRequestDto transactionRequestDto = new TransactionRequestDto(10);
 
-        _accountRepository.Setup(r => r.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync((Account?) null);
+        _accountRepository.Setup(repository => repository.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync((Account?) null);
 
         await Assert.ThrowsAsync<KeyNotFoundException>(async () => await _useCase.ExecuteAsync(transactionRequestDto, Guid.NewGuid()));
     }

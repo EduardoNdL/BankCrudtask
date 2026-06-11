@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TaskCrudBanco.Domain.Entities;
+using TaskCrudBanco.Domain.ValueObjects;
 
 namespace TaskCrudBanco.Infrastructure.Persistance;
 
@@ -24,6 +25,9 @@ public class BankDbContext : DbContext
 
         modelBuilder.Entity<Account>()
             .Property(a => a.Balance)
+            .HasConversion(
+                money => money.Value,
+                value => new Money(value))
             .HasPrecision(18, 2);
 
         modelBuilder.Entity<Transaction>()

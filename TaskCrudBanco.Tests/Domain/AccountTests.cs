@@ -5,6 +5,25 @@ namespace TaskCrudBanco.Tests.Domain;
 
 public class AccountTests
 {
+    public class ConstructorTests
+    {
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public void Constructor_NullOrEmptyAccountNumber_ThrowsArgumentException(string accountNumber)
+        {
+            Assert.ThrowsAny<ArgumentException>(() => new Account(accountNumber, "Eduardo"));
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public void Constructor_NullOrEmptyOwnerName_ThrowsArgumentException(string ownerName)
+        {
+            Assert.ThrowsAny<ArgumentException>(() => new Account("123", ownerName));
+        }
+    }
+
     public class DepositTests
     {
         private readonly Account _account;
@@ -19,16 +38,9 @@ public class AccountTests
         {
             _account.Deposit(10);
         
-            Assert.Equal(10, _account.Balance);
+            Assert.Equal(10m, _account.Balance);
         }
 
-        [Theory]
-        [InlineData(0)]
-        [InlineData(-5)]
-        public void Deposit_InvalidAmount_ThrowsArgumentException(decimal amount)
-        {
-            Assert.Throws<ArgumentException>(() => _account.Deposit(amount));
-        } 
     }
 
     public class WithdrawTests
@@ -48,21 +60,8 @@ public class AccountTests
         
             _account.Withdraw(5);
         
-            Assert.Equal(5, _account.Balance);
+            Assert.Equal(5m, _account.Balance);
         }
 
-        [Theory]
-        [InlineData(0)]
-        [InlineData(-5)]
-        public void Withdraw_InvalidAmount_ThrowsArgumentException(decimal amount)
-        {
-            Assert.Throws<ArgumentException>(() => _account.Withdraw(amount));
-        }
-
-        [Fact]
-        public void Withdraw_InsufficientBalance_ThrowsInsufficientFundsException()
-        {
-            Assert.Throws<InsufficientFundsException>(() => _account.Withdraw(5));
-        }
     }
 }

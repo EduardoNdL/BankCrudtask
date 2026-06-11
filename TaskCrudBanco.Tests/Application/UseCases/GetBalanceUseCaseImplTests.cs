@@ -21,7 +21,7 @@ public class GetBalanceUseCaseImplTests
         Account account = new Account("123", "Eduardo");
         account.Deposit(50);
 
-        _accountRepository.Setup(r => r.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(account);
+        _accountRepository.Setup(repository => repository.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(account);
 
         decimal balance = await _useCase.ExecuteAsync(Guid.NewGuid());
 
@@ -31,7 +31,7 @@ public class GetBalanceUseCaseImplTests
     [Fact]
     public async Task GetBalance_InvalidAccount_ThrowsKeyNotFoundException()
     {
-        _accountRepository.Setup(r => r.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync((Account?) null);
+        _accountRepository.Setup(repository => repository.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync((Account?) null);
 
         await Assert.ThrowsAsync<KeyNotFoundException>(async () => await _useCase.ExecuteAsync(Guid.NewGuid()));
     }

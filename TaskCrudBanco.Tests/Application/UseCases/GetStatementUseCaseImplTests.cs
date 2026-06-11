@@ -29,8 +29,8 @@ public class GetStatementUseCaseImplTests
             new Transaction(accountId, TransactionType.Withdraw, 30),
         ];
 
-        _accountRepository.Setup(r => r.GetByIdAsync(accountId)).ReturnsAsync(account);
-        _transactionRepository.Setup(r => r.GetByAccountIdAsync(accountId, null, null)).ReturnsAsync(transactions);
+        _accountRepository.Setup(repository => repository.GetByIdAsync(accountId)).ReturnsAsync(account);
+        _transactionRepository.Setup(repository => repository.GetByAccountIdAsync(accountId, null, null)).ReturnsAsync(transactions);
 
         StatementResponseDto response = await _useCase.ExecuteAsync(accountId);
 
@@ -45,8 +45,8 @@ public class GetStatementUseCaseImplTests
         Guid accountId = account.Id;
         List<Transaction> transactions = [];
 
-        _accountRepository.Setup(r => r.GetByIdAsync(accountId)).ReturnsAsync(account);
-        _transactionRepository.Setup(r => r.GetByAccountIdAsync(accountId, null, null)).ReturnsAsync(transactions);
+        _accountRepository.Setup(repository => repository.GetByIdAsync(accountId)).ReturnsAsync(account);
+        _transactionRepository.Setup(repository => repository.GetByAccountIdAsync(accountId, null, null)).ReturnsAsync(transactions);
 
         StatementResponseDto response = await _useCase.ExecuteAsync(accountId);
 
@@ -65,8 +65,8 @@ public class GetStatementUseCaseImplTests
             new Transaction(accountId, TransactionType.Deposit, 100),
         ];
 
-        _accountRepository.Setup(r => r.GetByIdAsync(accountId)).ReturnsAsync(account);
-        _transactionRepository.Setup(r => r.GetByAccountIdAsync(accountId, startDate, endDate)).ReturnsAsync(transactions);
+        _accountRepository.Setup(repository => repository.GetByIdAsync(accountId)).ReturnsAsync(account);
+        _transactionRepository.Setup(repository => repository.GetByAccountIdAsync(accountId, startDate, endDate)).ReturnsAsync(transactions);
 
         StatementResponseDto response = await _useCase.ExecuteAsync(accountId, startDate, endDate);
 
@@ -76,7 +76,7 @@ public class GetStatementUseCaseImplTests
     [Fact]
     public async Task GetStatement_InvalidAccount_ThrowsKeyNotFoundException()
     {
-        _accountRepository.Setup(r => r.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync((Account?) null);
+        _accountRepository.Setup(repository => repository.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync((Account?) null);
 
         await Assert.ThrowsAsync<KeyNotFoundException>(async () => await _useCase.ExecuteAsync(Guid.NewGuid()));
     }

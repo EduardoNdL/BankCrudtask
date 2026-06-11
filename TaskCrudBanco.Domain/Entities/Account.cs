@@ -1,4 +1,5 @@
 using TaskCrudBanco.Domain.Exceptions;
+using TaskCrudBanco.Domain.ValueObjects;
 
 namespace TaskCrudBanco.Domain.Entities;
 
@@ -8,7 +9,7 @@ public class Account
     public string AccountNumber { get; private set; }
     public string OwnerName { get; private set; }
 
-    public decimal Balance { get; private set; }
+    public Money Balance { get; private set; } = Money.Zero;
 
     public DateTime CreatedAt { get; private set; }
     public ICollection<Transaction> Transactions { get; private set; } = new List<Transaction>();
@@ -19,34 +20,23 @@ public class Account
 
     public Account(string accountNumber, string ownerName)
     {
+        ArgumentException.ThrowIfNullOrEmpty(accountNumber);
+        ArgumentException.ThrowIfNullOrEmpty(ownerName);
+        
         this.Id = Guid.NewGuid();
         this.AccountNumber = accountNumber;
         this.OwnerName = ownerName;
-        this.Balance = 0;
+        this.Balance = Money.Zero;
         this.CreatedAt = DateTime.Now;
     }
 
     public void Deposit(decimal amount)
     {
-        if(amount <= 0)
-        {
-            throw new ArgumentException("Value must be higher than zero");
-        }
-        this.Balance += amount;
+        this.Balance.Add(amount);
     } 
 
     public void Withdraw(decimal amount)
     {
-        if(amount <= 0)
-        {
-            throw new ArgumentException("Value must be higher than zero");
-        }
-
-        if(Balance < amount)
-        {
-            throw new InsufficientFundsException();
-        }
-
-        this.Balance -= amount;
+        this.Balance.Subtract(amount);
     }
 }
