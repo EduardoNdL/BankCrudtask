@@ -25,6 +25,7 @@ public class DepositUseCaseImpl : IDepositUseCase
         Transaction transaction = new Transaction(accountId, TransactionType.Deposit, request.Amount);
 
         account.Deposit(transaction.Amount);
+        await _accountRepository.UpdateAsync(account);
         Transaction response = await _transactionRepository.AddAsync(transaction);
 
         return new TransactionResponseDto(response.Id, response.Type, response.Amount, response.CreatedAt);

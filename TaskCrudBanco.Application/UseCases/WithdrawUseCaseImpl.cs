@@ -25,6 +25,7 @@ public class WithdrawUseCaseImpl : IWithdrawUseCase
         Transaction transaction = new Transaction(accountId, TransactionType.Withdraw, request.Amount);
 
         account.Withdraw(transaction.Amount);
+        await _accountRepository.UpdateAsync(account);
         Transaction response = await _transactionRepository.AddAsync(transaction);
 
         return new TransactionResponseDto(response.Id, response.Type, response.Amount, response.CreatedAt);
