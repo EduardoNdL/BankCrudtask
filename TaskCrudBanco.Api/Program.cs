@@ -3,7 +3,7 @@ using TaskCrudBanco.Application.Ports;
 using TaskCrudBanco.Application.UseCases;
 using TaskCrudBanco.Domain.Ports;
 using TaskCrudBanco.Infrastructure.Persistance;
-using TaskCrudBanco.Infrastructure.Persistance.Repositories;
+using TaskCrudBanco.Infrastructure.Persistance.Postgres.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,8 +14,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<BankDbContext>(options =>
     options.UseSqlite("Data Source=bank.db"));
 
-builder.Services.AddScoped<IAccountRepository, SqliteAccountRepository>();
-builder.Services.AddScoped<ITransactionRepository, SqliteTransactionRepository>();
+builder.Services.AddScoped<IAccountRepository, PostgresAccountRepository>();
+builder.Services.AddScoped<ITransactionRepository, PostgresTransactionRepository>();
 
 builder.Services.AddScoped<ICreateAccountUseCase, CreateAccountUseCaseImpl>();
 builder.Services.AddScoped<IWithdrawUseCase, WithdrawUseCaseImpl>();

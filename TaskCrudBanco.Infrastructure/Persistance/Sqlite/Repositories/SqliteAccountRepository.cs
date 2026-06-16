@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using TaskCrudBanco.Domain.Entities;
 using TaskCrudBanco.Domain.Ports;
 
-namespace TaskCrudBanco.Infrastructure.Persistance.Repositories;
+namespace TaskCrudBanco.Infrastructure.Persistance.Sqlite.Repositories;
 
 public class SqliteAccountRepository : IAccountRepository
 {
