@@ -15,11 +15,11 @@ namespace TaskCrudBanco.Infrastructure.Migrations
                 name: "Accounts",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    AccountNumber = table.Column<string>(type: "TEXT", nullable: false),
-                    OwnerName = table.Column<string>(type: "TEXT", nullable: false),
-                    Balance = table.Column<decimal>(type: "TEXT", precision: 18, scale: 2, nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    AccountNumber = table.Column<string>(type: "text", nullable: false),
+                    OwnerName = table.Column<string>(type: "text", nullable: false),
+                    Balance = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -30,11 +30,11 @@ namespace TaskCrudBanco.Infrastructure.Migrations
                 name: "Transactions",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    AccountId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Type = table.Column<int>(type: "INTEGER", nullable: false),
-                    Amount = table.Column<decimal>(type: "TEXT", precision: 18, scale: 2, nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    AccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Type = table.Column<int>(type: "integer", nullable: false),
+                    Amount = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {

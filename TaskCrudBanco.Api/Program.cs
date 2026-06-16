@@ -12,7 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<BankDbContext>(options =>
-    options.UseSqlite("Data Source=bank.db"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IAccountRepository, PostgresAccountRepository>();
 builder.Services.AddScoped<ITransactionRepository, PostgresTransactionRepository>();

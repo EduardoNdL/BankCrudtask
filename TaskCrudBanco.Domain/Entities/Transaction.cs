@@ -26,6 +26,6 @@ public class Transaction
         this.AccountId = accountId;
         this.Type = type;
         this.Amount = amount;
-        this.CreatedAt = DateTime.Now;
+        this.CreatedAt = DateTime.UtcNow;
     }
 }

@@ -27,7 +27,7 @@ public class Account
         this.AccountNumber = accountNumber;
         this.OwnerName = ownerName;
         this.Balance = Money.Zero;
-        this.CreatedAt = DateTime.Now;
+        this.CreatedAt = DateTime.UtcNow;
     }
 
     public void Deposit(decimal amount)
