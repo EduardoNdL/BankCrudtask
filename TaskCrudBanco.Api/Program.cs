@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TaskCrudBanco.Application.Ports;
+using TaskCrudBanco.Application.Strategies;
 using TaskCrudBanco.Application.UseCases;
 using TaskCrudBanco.Domain.Ports;
 using TaskCrudBanco.Infrastructure.Persistance;
@@ -18,8 +19,9 @@ builder.Services.AddScoped<IAccountRepository, SqliteAccountRepository>();
 builder.Services.AddScoped<ITransactionRepository, SqliteTransactionRepository>();
 
 builder.Services.AddScoped<ICreateAccountUseCase, CreateAccountUseCaseImpl>();
-builder.Services.AddScoped<IWithdrawUseCase, WithdrawUseCaseImpl>();
-builder.Services.AddScoped<IDepositUseCase, DepositUseCaseImpl>();
+builder.Services.AddScoped<ITransactionUseCase, TransactionUseCaseImpl>();
+builder.Services.AddScoped<ITransactionStrategy, DepositStrategy>();
+builder.Services.AddScoped<ITransactionStrategy, WithdrawStrategy>();
 builder.Services.AddScoped<IGetBalanceUseCase, GetBalanceUseCaseImpl>();
 builder.Services.AddScoped<IGetStatementUseCase, GetStatementUseCaseImpl>();
 

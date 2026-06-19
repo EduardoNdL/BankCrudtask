@@ -1,6 +1,8 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace TaskCrudBanco.Application.Dto;
 
 public record AccountRequestDto(
-    string AccountNumber,
-    string OwnerName
+    [Required] [MinLength(4)] [MaxLength(20)] string AccountNumber,
+    [Required] [MinLength(2)] [MaxLength(100)] string OwnerName
 );

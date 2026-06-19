@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TaskCrudBanco.Application.Dto;
 using TaskCrudBanco.Application.Ports;
+using TaskCrudBanco.Domain.Enums;
 
 namespace TaskCrudBanco.Api.Controllers;
 
@@ -8,26 +9,24 @@ namespace TaskCrudBanco.Api.Controllers;
 [Route("api/accounts/{accountId}/transactions/")]
 public class TransactionsController : ControllerBase
 {
-    private readonly IDepositUseCase _deposit;
-    private readonly IWithdrawUseCase _withdraw;
+    private readonly ITransactionUseCase _transactionUseCase;
 
 
-    public TransactionsController(IDepositUseCase deposit, IWithdrawUseCase withdraw)
+    public TransactionsController(ITransactionUseCase transactionUseCase)
     {
-        _deposit = deposit;
-        _withdraw = withdraw;
+        _transactionUseCase = transactionUseCase;
     }
 
     [HttpPost("deposit")]
     public async Task<IActionResult> Deposit(Guid accountId, [FromBody] TransactionRequestDto request)
     {
-        return Ok(await _deposit.ExecuteAsync(request, accountId));
+        return Ok(await _transactionUseCase.ExecuteAsync(request, accountId, TransactionType.Deposit));
     }
 
     [HttpPost("withdraw")]
     public async Task<IActionResult> Withdraw(Guid accountId, [FromBody] TransactionRequestDto request)
     {
-        return Ok(await _withdraw.ExecuteAsync(request, accountId));
+        return Ok(await _transactionUseCase.ExecuteAsync(request, accountId, TransactionType.Withdraw));
     }
 
 
