@@ -9,6 +9,15 @@ API RESTful bancária para gerenciamento de contas e transações financeiras, c
 - xUnit + Moq (testes unitários)
 - Swagger / OpenAPI
 
+## Validação de entrada
+
+Os DTOs validam os dados recebidos via `DataAnnotations`. O `[ApiController]` intercepta automaticamente requisições inválidas antes de chegarem nos use cases, retornando `400 Bad Request` com um corpo `ProblemDetails` detalhando os erros por campo.
+
+Regras aplicadas:
+- `AccountNumber`: obrigatório, entre 4 e 20 caracteres
+- `OwnerName`: obrigatório, entre 2 e 100 caracteres
+- `Amount`: obrigatório, maior que zero
+
 ## Arquitetura
 
 O projeto segue o padrão de **Arquitetura Hexagonal (Ports & Adapters)**, separado em quatro camadas:
@@ -93,25 +102,27 @@ sequenceDiagram
 sequenceDiagram
     actor Client
     participant TransactionsController
-    participant DepositUseCase
+    participant TransactionUseCase
+    participant DepositStrategy
     participant AccountRepository
     participant TransactionRepository
     participant Database
 
     Client->>TransactionsController: POST /api/accounts/{id}/transactions/deposit
-    TransactionsController->>DepositUseCase: ExecuteAsync(request, accountId)
-    DepositUseCase->>AccountRepository: GetByIdAsync(accountId)
+    TransactionsController->>TransactionUseCase: ExecuteAsync(request, accountId)
+    TransactionUseCase->>AccountRepository: GetByIdAsync(accountId)
     AccountRepository->>Database: SELECT
     Database-->>AccountRepository: account
-    AccountRepository-->>DepositUseCase: account
-    DepositUseCase->>DepositUseCase: account.Deposit(amount)
-    DepositUseCase->>AccountRepository: UpdateAsync(account)
+    AccountRepository-->>TransactionUseCase: account
+    TransactionUseCase->>DepositStrategy: Apply(account, request.Amount)
+    DepositStrategy->>DepositStrategy: account.Deposit(amount)
+    TransactionUseCase->>AccountRepository: UpdateAsync(account)
     AccountRepository->>Database: UPDATE
-    DepositUseCase->>TransactionRepository: AddAsync(transaction)
+    TransactionUseCase->>TransactionRepository: AddAsync(transaction)
     TransactionRepository->>Database: INSERT
     Database-->>TransactionRepository: transaction
-    TransactionRepository-->>DepositUseCase: transaction
-    DepositUseCase-->>TransactionsController: TransactionResponseDto
+    TransactionRepository-->>TransactionUseCase: transaction
+    TransactionUseCase-->>TransactionsController: TransactionResponseDto
     TransactionsController-->>Client: 200 OK
 ```
 
@@ -121,26 +132,28 @@ sequenceDiagram
 sequenceDiagram
     actor Client
     participant TransactionsController
-    participant WithdrawUseCase
+    participant TransactionUseCase
+    participant WithdrawStrategy
     participant AccountRepository
     participant TransactionRepository
     participant Database
 
     Client->>TransactionsController: POST /api/accounts/{id}/transactions/withdraw
-    TransactionsController->>WithdrawUseCase: ExecuteAsync(request, accountId)
-    WithdrawUseCase->>AccountRepository: GetByIdAsync(accountId)
+    TransactionsController->>TransactionUseCase: ExecuteAsync(request, accountId)
+    TransactionUseCase->>AccountRepository: GetByIdAsync(accountId)
     AccountRepository->>Database: SELECT
     Database-->>AccountRepository: account
-    AccountRepository-->>WithdrawUseCase: account
-    WithdrawUseCase->>WithdrawUseCase: account.Withdraw(amount)
-    Note over WithdrawUseCase: lança InsufficientFundsException<br/>se saldo insuficiente
-    WithdrawUseCase->>AccountRepository: UpdateAsync(account)
+    AccountRepository-->>TransactionUseCase: account
+    TransactionUseCase->>WithdrawStrategy: Apply(account, request.Amount)
+    WithdrawStrategy->>WithdrawStrategy: account.Withdraw(amount)
+    Note over WithdrawStrategy: lança InsufficientFundsException<br/>se saldo insuficiente
+    TransactionUseCase->>AccountRepository: UpdateAsync(account)
     AccountRepository->>Database: UPDATE
-    WithdrawUseCase->>TransactionRepository: AddAsync(transaction)
+    TransactionUseCase->>TransactionRepository: AddAsync(transaction)
     TransactionRepository->>Database: INSERT
     Database-->>TransactionRepository: transaction
-    TransactionRepository-->>WithdrawUseCase: transaction
-    WithdrawUseCase-->>TransactionsController: TransactionResponseDto
+    TransactionRepository-->>TransactionUseCase: transaction
+    TransactionUseCase-->>TransactionsController: TransactionResponseDto
     TransactionsController-->>Client: 200 OK
 ```
 
